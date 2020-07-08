@@ -1,0 +1,13 @@
+aws_region                = "ap-south-1"
+vpc_cidr_block            = "10.15.0.0/16"
+public_subnet_cidr_block  = "10.15.1.0/24"
+private_subnet_cidr_block = "10.15.2.0/24"
+account_no                = "a0001"
+region                    = "aps1"
+avail_zone                = "1a"
+deployment_stage          = "d" # Development 
+client                    = "onsy"
+product                   = "infra"
+projectcode               = ""
+environment               = "Dev"
+owner                     = "Admin"
