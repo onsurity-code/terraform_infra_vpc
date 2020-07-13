@@ -43,19 +43,19 @@ pipeline {
 			script {
 				sh """
 					echo "Initiating FORMAT"
-					terraform fmt"
+					terraform fmt
 					echo "Completed FORMAT"
 
 					echo "Initiating UPDATE"
-					terraform get -update=true"
+					terraform get -update=true
 					echo "Completed Update"
 
 					echo "Initiating INIT"
-                	terraform init -backend-config=environments/${params.environment}/backend.config"
+                	terraform init -backend-config=environments/${params.environment}/backend.config
 					echo "Completed INIT"
 
 					echo "Initiating PLAN"
-                	terraform plan -var-file=environments/${params.environment}/variables.tfvars"
+                	terraform plan -var-file=environments/${params.environment}/variables.tfvars
 					echo "Initiating PLAN"
 					
 					echo "Completed FORMAT UPDATE INIT PLAN"
