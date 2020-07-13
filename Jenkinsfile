@@ -37,7 +37,7 @@ pipeline {
     }
     stage('TF Plan') {
       when {
-        expression { params.action == 'create' }
+        expression { params.action == 'create VPC' }
 		}	
 		steps {
 			script {
