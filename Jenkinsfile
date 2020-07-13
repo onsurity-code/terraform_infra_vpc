@@ -86,8 +86,7 @@ pipeline {
       steps {
         script {
 				sh """
-				terraform workspace select ${params.environment}
-				terraform destroy -auto-approve
+				terraform destroy -var-file=environments/${params.environment}/variables.tfvars  --auto-approve=true
 				"""
 				}
 			}
