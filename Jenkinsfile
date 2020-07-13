@@ -9,7 +9,7 @@ pipeline {
 		choice(name: 'action', choices: 'create VPC', description: 'Create VPC/update  VPC')
 		choice(name: 'environment', choices : 'demo', description: "VPC creation;eg AWS creates VPC named `aws-a0001-aps1-1a-d-vpc-onsy-onsy-devvpc01`. \nd -> dev\ns -> stage\nt -> tools\nu -> UAT\np -> prod\nx -> demo")
   	}
-		choice(name: 'environment', choices : 'dev\nstage\ntools\nUAT\nprod\ndemo', description: "VPC creation;eg AWS creates VPC named `aws-a0001-aps1-1a-d-vpc-onsy-onsy-devvpc01`. \nd -> dev\ns -> stage\nt -> tools\nu -> UAT\np -> prod\nx -> demo")
+		// choice(name: 'environment', choices : 'dev\nstage\ntools\nUAT\nprod\ndemo', description: "VPC creation;eg AWS creates VPC named `aws-a0001-aps1-1a-d-vpc-onsy-onsy-devvpc01`. \nd -> dev\ns -> stage\nt -> tools\nu -> UAT\np -> prod\nx -> demo")
   agent any
 
   stages {
