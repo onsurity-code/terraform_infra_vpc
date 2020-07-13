@@ -15,7 +15,7 @@ pipeline {
   stages {
     stage('checkout') {
         steps {
-            git url: 'https://github.com/ashishsarkar/prac.git'
+            git url: 'https://github.com/ashishsarkar/terraform_infra_vpc.git'
         }
     }
 	stage('Setup') {
