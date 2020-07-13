@@ -1,26 +1,100 @@
-pipeline{
-    agent any
-    environment {
-        PATH = "${PATH}:${getTerraformPath()}"
-    }
+pipeline {
 
-    stages{
-        stage('terraform init and apply - dev'){
-            steps{
-                sh returnStatus: true, script: 'terraform workspace new dev'
-                sh "terraform get -update=true"
-                sh "terraform init -backend-config=environments/stage/backend.config"
-                sh "terraform plan -var-file=environments/stage/variables.tfvars"
-                sh "terraform apply -var-file=environments/stage/variables.tfvars  --auto-approve=true"
-                // sh "terraform init"
-                // sh "terraform apply -var-file=variables.tfvars -auto-approve"
-            }
+//    parameters {
+//     choice(name: 'action', choices: 'create VPC', description: 'Create VPC/update  VPC')
+// 	string(name: 'Environment', defaultValue : 'dev', description: "VPC creation;eg AWS creates VPC named `aws-a0001-aps1-1a-d-vpc-onsy-onsy-devvpc01`.")
+//   }
+
+    parameters {
+		choice(name: 'action', choices: 'create VPC', description: 'Create VPC/update  VPC')
+		choice(name: 'environment', choices : 'dev\nstage\ntools\nUAT\nprod\ndemo', description: "VPC creation;eg AWS creates VPC named `aws-a0001-aps1-1a-d-vpc-onsy-onsy-devvpc01`. \nd -> dev\ns -> stage\nt -> tools\nu -> UAT\np -> prod\nx -> demo")
+  	}
+  
+  agent any
+
+  stages {
+    stage('checkout') {
+        steps {
+            git url: 'https://github.com/ashishsarkar/prac.git'
         }
     }
-}
+	stage('Setup') {
+		steps {
+			script {
+				currentBuild.displayName = "#" + env.BUILD_NUMBER + " " + params.action + " AWS-VPC-" + params.environment
+				plan = params.environment + '.plan'
+			}
+		}
+	}
+    stage('Set Terraform path') {
+        steps {
+            script {
+                def tfHome = tool name: 'terraform'
+                env.PATH = "${tfHome}:${env.PATH}"
+            }
+            sh 'terraform -version'
+        }
+    }
+    stage('TF Plan') {
+      when {
+        expression { params.action == 'create' }
+		}	
+		steps {
+			script {
+				sh """
+					echo "Initiating FORMAT"
+					terraform fmt"
+					echo "Completed FORMAT"
 
-def getTerraformPath(){
-    def tfHome = tool name: 'terraform', type: 'org.jenkinsci.plugins.terraform.TerraformInstallation'
-    // def tfHome = tool name: 'terraform'
-    return tfHome
+					echo "Initiating UPDATE"
+					terraform get -update=true"
+					echo "Completed Update"
+
+					echo "Initiating INIT"
+                	terraform init -backend-config=environments/${params.environment}/backend.config"
+					echo "Completed INIT"
+
+					echo "Initiating PLAN"
+                	terraform plan -var-file=environments/${params.environment}/variables.tfvars"
+					echo "Initiating PLAN"
+					
+					echo "Completed FORMAT UPDATE INIT PLAN"
+					echo ${params.environment}
+				"""
+					sleep 10
+					}
+			}
+	}
+    // stage('TF Apply') {
+    //   when {
+    //     expression { params.action == 'create' }
+	// 	}	
+	// 	steps {
+	// 		script {
+	// 			sh """
+	// 				terraform apply -var-file=environments/${params.environment}/variables.tfvars  --auto-approve=true
+	// 			"""
+    //     }
+    //   }
+    // }
+
+	// Created for future enhancement
+    // stage('TF Destroy') {
+    //   when {
+    //     expression { params.action == 'destroy' }
+    //   }
+    //   steps {
+    //     script {
+	// 		dir('eksterraform') {
+	// 			withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS_Credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']]) {
+	// 			sh """
+	// 			terraform workspace select ${params.environment}
+	// 			terraform destroy -auto-approve
+	// 			"""
+	// 			}
+	// 		}
+    //     }
+    //   }
+    // }
+  }
 }
