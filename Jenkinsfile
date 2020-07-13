@@ -65,18 +65,18 @@ pipeline {
 					}
 			}
 	}
-    // stage('TF Apply') {
-    //   when {
-    //     expression { params.action == 'create' }
-	// 	}	
-	// 	steps {
-	// 		script {
-	// 			sh """
-	// 				terraform apply -var-file=environments/${params.environment}/variables.tfvars  --auto-approve=true
-	// 			"""
-    //     }
-    //   }
-    // }
+    stage('TF Apply') {
+      when {
+        expression { params.action == 'create VPC' }
+		}	
+		steps {
+			script {
+				sh """
+					terraform apply -var-file=environments/${params.environment}/variables.tfvars  --auto-approve=true
+				"""
+        }
+      }
+    }
 
 	// Created for future enhancement
     // stage('TF Destroy') {
