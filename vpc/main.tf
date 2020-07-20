@@ -9,6 +9,7 @@ locals {
   projectcode = "${var.projectcode}"
   environment = "${var.environment}"
   owner       = "${var.owner}"
+  
 }
 
 
@@ -19,7 +20,7 @@ resource "aws_vpc" "primary_vpc" {
   enable_dns_hostnames = true
 
   tags = {
-    Name =  "aws-${local.account_no}-${local.region}-${local.avail_zone}-${local.deployment_stage}-vpc-${local.client}-${local.product}-prodvpc01"
+    Name =  "aws-${local.account_no}-${local.region}-${local.avail_zone}-${local.deployment_stage}-vpc-${local.client}-${local.product}-${local.environment}vpc01"
     Environment = "${local.environment}"
     Owner = "${local.owner}"
     Projectcode = "${local.projectcode}"
